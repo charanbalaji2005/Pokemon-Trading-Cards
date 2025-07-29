@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pokémon Card Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="loading" id="loading">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Pokebola-pokeball-png-0.png" class="pokeball-loader" alt="Loading">
+        <p>Loading Pokémon Data...</p>
+    </div>
+    
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notification-text">Card saved successfully!</span>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>Pokémon Card Generator</h1>
+            <p class="header-subtitle">Search, create, and save Pokémon cards with real data</p>
+            
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="pokemon-search" placeholder="Search Pokémon by name or ID..." autocomplete="off">
+                    <button id="search-btn">Search</button>
+                </div>
+                <div class="search-suggestions" id="search-suggestions"></div>
+            </div>
+        </header>
+        
+        <div class="app-container">
+            <div class="card-container">
+                <div class="card-actions">
+                    <button class="btn btn-primary" onclick="printCard()">
+                        <i class="fas fa-print"></i> Print Card
+                    </button>
+                    <button class="btn btn-primary" onclick="saveCard()">
+                        <i class="fas fa-download"></i> Save Card
+                    </button>
+                    <button class="btn btn-secondary" onclick="randomizeCard()">
+                        <i class="fas fa-random"></i> Randomize
+                    </button>
+                </div>
+                
+                <div class="pokemon-card" id="pokemonCard">
+                    <div class="card-header">
+                        <div class="card-title">Charizard</div>
+                        <div class="hp">HP 78</div>
+                    </div>
+                    
+                    <div class="card-image">
+                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png" alt="Charizard" id="pokemon-img">
+                        <svg class="energy-symbol" viewBox="0 0 24 24">
+                            <path fill="#ff0000" d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M12,20c-4.41,0-8-3.59-8-8s3.59-8,8-8s8,3.59,8,8 S16.41,20,12,20z"/>
+                            <path fill="#ff0000" d="M12,6c-3.31,0-6,2.69-6,6s2.69,6,6,6s6-2.69,6-6S15.31,6,12,6z M12,16c-2.21,0-4-1.79-4-4s1.79-4,4-4s4,1.79,4,4 S14.21,16,12,16z"/>
+                        </svg>
+                    </div>
+                    
+                    <div class="card-stats">
+                        <div class="stat">
+                            <div class="stat-label">Attack</div>
+                            <div class="stat-value" id="attack-value">84</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Defense</div>
+                            <div class="stat-value" id="defense-value">78</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Speed</div>
+                            <div class="stat-value" id="speed-value">100</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Special</div>
+                            <div class="stat-value" id="special-value">85</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-details">
+                        <h3 class="section-title">Abilities</h3>
+                        <div class="abilities" id="abilities-container">
+                            <div class="ability">Blaze</div>
+                            <div class="ability">Solar Power</div>
+                        </div>
+                        
+                        <h3 class="section-title">Top Moves</h3>
+                        <div class="moves" id="moves-container">
+                            <div class="move">Mega Punch</div>
+                            <div class="move">Fire Punch</div>
+                            <div class="move">Thunder Punch</div>
+                            <div class="move">Scratch</div>
+                            <div class="move">Swords Dance</div>
+                            <div class="move">Fire Blast</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer">
+                        © 2025 Pokémon Company. This is a fan-made card for personal use only.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="legal-container">
+                <div class="legal-nav">
+                    <button class="legal-btn active" data-target="terms">Terms</button>
+                    <button class="legal-btn" data-target="privacy">Privacy</button>
+                    <button class="legal-btn" data-target="disclaimer">Disclaimer</button>
+                </div>
+                
+                <div class="legal-content">
+                    <div id="terms" class="legal-section active">
+                        <h2>Terms and Conditions</h2>
+                        <h3>1. Acceptance of Terms</h3>
+                        <p>By accessing and using this Pokémon Card Generator ("Service"), you accept and agree to be bound by these Terms and Conditions.</p>
+                        
+                        <h3>2. Use of Service</h3>
+                        <p>You may use this Service to create Pokémon-themed cards for personal, non-commercial use only. Commercial use is strictly prohibited.</p>
+                        
+                        <h3>3. Intellectual Property</h3>
+                        <p>All Pokémon content is property of Nintendo, Game Freak, and The Pokémon Company. This service uses data under fair use principles for educational and informational purposes.</p>
+                        
+                        <h3>4. User Responsibilities</h3>
+                        <p>You agree not to:</p>
+                        <ul>
+                            <li>Use the Service for any unlawful purpose</li>
+                            <li>Attempt to access restricted areas of the Service</li>
+                            <li>Use automated systems to extract data</li>
+                            <li>Misrepresent the Service's content as official</li>
+                        </ul>
+                        
+                        <h3>5. Limitation of Liability</h3>
+                        <p>We are not responsible for any inaccuracies in Pokémon data or any damages resulting from Service use.</p>
+                    </div>
+                    
+                    <div id="privacy" class="legal-section">
+                        <h2>Privacy Policy</h2>
+                        <h3>1. Information Collection</h3>
+                        <p>We do not collect personal information except:</p>
+                        <ul>
+                            <li>Anonymous analytics via Cloudflare</li>
+                            <li>Cookies for basic functionality</li>
+                            <li>Search queries (not stored)</li>
+                        </ul>
+                        
+                        <h3>2. Third-Party Services</h3>
+                        <p>The Service uses:</p>
+                        <ul>
+                            <li>PokéAPI (data source)</li>
+                            <li>Cloudflare (performance & security)</li>
+                            <li>Font Awesome (icons)</li>
+                        </ul>
+                        
+                        <h3>3. Children's Privacy</h3>
+                        <p>We comply with COPPA and do not knowingly collect data from children under 13.</p>
+                        
+                        <h3>4. Data Security</h3>
+                        <p>While we implement security measures, no internet transmission is 100% secure.</p>
+                    </div>
+                    
+                    <div id="disclaimer" class="legal-section">
+                        <h2>Disclaimer</h2>
+                        <p>Pokémon Card Generator is a fan-made project not affiliated with Nintendo, Game Freak, or The Pokémon Company.</p>
+                        <p>All copyrighted content is property of their respective owners. Pokémon and Pokémon character names are trademarks of Nintendo.</p>
+                        <p>Data is provided by PokéAPI without warranty of accuracy.</p>
+                        <p>This service does not collect or store personal user data beyond basic analytics.</p>
+                        <p>Generated cards are for personal use only and may not be sold or used commercially.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Pokémon Card Generator is a fan-made project. Pokémon © 1995-2025 Nintendo, Creatures, Game Freak, TV Tokyo, ShoPro, JR Kikaku. Pokémon characters, names and related indicia are trademarks of Nintendo.</p>
+            <p>No copyright infringement intended. For entertainment purposes only.</p>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
